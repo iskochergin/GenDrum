@@ -41,7 +41,7 @@ import json
 import subprocess
 import shutil
 
-# need conda env (without idk)
+# Я НЕ ЗНАЮ КАК ЭТО ЮЗАТЬ, НАДО ЧТО-ТО ДРУГОЕ, ДАЖЕ С КОНДОЙ НЕ СМОГ ПОСТАВИТЬ!!!!
 from musicnn.tagger import top_tags
 
 import csv

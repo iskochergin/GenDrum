@@ -1,0 +1,76 @@
+Model Scratch Pipeline
+
+1. Data to Features
+   - Backing track: extract 80-band mel-spectrograms at 16 kHz, aligned to beat positions.
+   - Drums: convert MIDI to compound-word tokens like <Δt, instr, velocity>.
+
+2. Features to Latent Codes
+   - In the audio domain: train two VQ-VAEs – one on the backing track mel spectrograms (without drums), one on drum mel spectrograms.
+   - These VQ codes serve as tokens for a Transformer.
+
+3. Transformer Model
+   - Input: codes of the backing track (without drums), plus beat-position embeddings.
+   - Output: codes for the corresponding drum part.
+   - Output codes are decoded by the drum-VQ-VAE decoder to mel-spectrograms, then vocoded back to audio.
+
+4. Training
+   - Use cross-entropy loss on predicted drum tokens.
+   - Add an auxiliary loss to help the model respect bar positions or beat emphasis.
+
+5. Inference
+   - Given a new backing track, extract features, encode to VQ codes, prepend the genre token if used, and sample drum codes.
+   - Decode those codes back to audio.
+
+Genre Distribution Challenges and Solutions
+
+- Problem: musicnn predictions are often skewed toward popular genres like Pop, EDM, or Rock.
+- Stratified Splits: re-split the data so each genre is proportionally represented in train, validation, and test.
+- Oversampling: increase examples from rare genres using duplication or small augmentations.
+- Undersampling: reduce the number of dominant genre examples to prevent bias.
+- Alternatively, group similar subgenres under common tags to simplify classification (e.g. metal-core and death-metal as "metal").
+
+Alternative Model: Groove-Only Transformer
+
+- This model does not condition on backing music. It simply continues a drum sequence.
+- It can still be genre-aware using a <STYLE=...> token at the beginning of the sequence.
+- Simpler to implement: only MIDI is needed, no spectrograms or vocoders.
+- Limitation: drums are generated in isolation, so fills and dynamics won’t match the actual musical context.
+
+Evaluation and Quality
+
+- Objective metrics:
+  - F1 score for how well the predicted drum hits match ground truth.
+  - Groove distance to measure differences in timing and velocity.
+
+- Subjective metrics:
+  - Human listening tests to rate groove quality.
+  - ABX testing: listener hears A (real), B (fake), and X (random), and must say if X matches A or B.
+
+- Genre accuracy:
+  - Train a separate genre classifier on real drum tracks, then apply it to generated ones to check if the output matches the intended style.
+
+Recommended Articles and Sources
+
+- JukeDrummer: Conditional Beat-Aware Audio-Domain Drum Accompaniment Generation via Transformer VQ-VAE
+  https://arxiv.org/abs/2309.05991
+  Proposes a method to generate drum accompaniments using dual VQ-VAEs and Transformer with beat conditioning.
+
+- PocketVAE: A Two-step Model for Groove Generation and Control
+  https://arxiv.org/abs/2306.04589
+  Describes a model that separates generation into timing, velocity, and rhythm tokens with genre conditioning.
+
+- Self-Supervised VQ-VAE for One-Shot Music Style Transfer
+  https://arxiv.org/abs/2203.01733
+  Focuses on separating pitch and timbre in audio using discrete representations for music style transfer.
+
+- Jukebox: A Generative Model for Music
+  https://arxiv.org/abs/2005.00341
+  OpenAI’s large-scale raw-audio music generation model using multi-level VQ-VAE + Transformers. Includes genre/artist conditioning.
+
+- Stratified Sampling (Wikipedia)
+  https://en.wikipedia.org/wiki/Stratified_sampling
+  Overview of dataset sampling methods that ensure balanced class representation in splits.
+
+- MTG-Jamendo Dataset Analysis
+  https://arxiv.org/abs/1907.01983
+  Discusses real-world music genre imbalance in datasets and provides strategies to handle it for multi-label learning.
