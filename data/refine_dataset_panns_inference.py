@@ -1,3 +1,10 @@
+# WORKS BAD, LOW AUC!!!
+
+
+
+
+
+
 """EXPECTED STRUCTURE
 
 processed_data/
