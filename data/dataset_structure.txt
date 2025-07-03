@@ -1,0 +1,17 @@
+slakh2100_16k/                                             :contentReference[oaicite:0]{index=0}
+├── slakh_index_2100-yourmt3-16k.json     # JSON index for MIRData integration :contentReference[oaicite:1]{index=1}
+├── train/                                           :contentReference[oaicite:2]{index=2}
+│   ├── Track00001/                                 :contentReference[oaicite:3]{index=3}
+│   │   ├── mix.wav              # full mix (mono, 16 kHz, 16-bit) :contentReference[oaicite:4]{index=4}
+│   │   ├── stems/                # per-instrument WAV stems
+│   │   │   ├── S00.wav           :contentReference[oaicite:5]{index=5}
+│   │   │   ├── S01.wav           :contentReference[oaicite:6]{index=6}
+│   │   │   └── …
+│   │   └── midi/                 # aligned instrument MIDI tracks
+│   │       ├── S00.mid           :contentReference[oaicite:7]{index=7}
+│   │       ├── S01.mid           :contentReference[oaicite:8]{index=8}
+│   │       └── …
+│   ├── Track00002/ …
+│   └── …
+├── validation/ …                                    :contentReference[oaicite:9]{index=9}
+└── test/ …                                          :contentReference[oaicite:10]{index=10}
